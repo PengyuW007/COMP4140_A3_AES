@@ -42,7 +42,7 @@ public class AES {
                 nextLine = inFile.readLine();
                 change++;
             }//end reading
-            //System.out.println(change);
+            System.out.println(change);
         } catch (IOException e) {
             System.out.println(e.getMessage());
             System.out.println(e.fillInStackTrace());
