@@ -1,6 +1,9 @@
 # Default ignored files
 /shelf/
 /workspace.xml
+/modules.xml
+/misc.xml
+/vcs.xml
 # Datasource local storage ignored files
 /../../../../../../../../:\1- UMLearn\COMP\COMP 4140\Assignments\A3\a3-pengyu-wang\.idea/dataSources/
 /dataSources.local.xml
