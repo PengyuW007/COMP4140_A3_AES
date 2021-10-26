@@ -8,7 +8,7 @@ public class AES {
         String sBoxFile = "sbox.txt";//name of the S-box file
 
         sBox(sBoxFile);
-/*
+
         Scanner scan = new Scanner(System.in);
 
         //get input of plaintext and key files
@@ -18,7 +18,7 @@ public class AES {
         String filename2 = scan.nextLine();
 
         //process file1 and file2
-*/
+
     }//end main
 
     public static String[][] sBox(String sboxFile) {
@@ -33,14 +33,16 @@ public class AES {
         try {
             inFile = new BufferedReader(new FileReader(sboxFile));
             nextLine = inFile.readLine();
-            int even = 0;
+            int change = 0;//
 
             while (nextLine != null) {
-                System.out.println(nextLine);
+                if(change==1){
+                    change = 0;
+                }
                 nextLine = inFile.readLine();
-                even++;
+                change++;
             }//end reading
-            //System.out.println(even);
+
         } catch (IOException e) {
             System.out.println(e.getMessage());
             System.out.println(e.fillInStackTrace());
