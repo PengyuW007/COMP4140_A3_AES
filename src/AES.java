@@ -33,16 +33,22 @@ public class AES {
         try {
             inFile = new BufferedReader(new FileReader(sboxFile));
             nextLine = inFile.readLine();
-            int change = 0;//
-
+            int line = 1;//
+            int col = 0;
             while (nextLine != null) {
-                if(change==1){
-                    change = 0;
+                if(line%2==0){
+                    //a new col
+
                 }
+                int i = 0;
+                inTokens= nextLine.split(" ");
+
+
+
                 nextLine = inFile.readLine();
-                change++;
+                line++;
             }//end reading
-            System.out.println(change);
+
         } catch (IOException e) {
             System.out.println(e.getMessage());
             System.out.println(e.fillInStackTrace());
