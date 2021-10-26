@@ -8,7 +8,7 @@ public class AES {
         String sBoxFile = "sbox.txt";//name of the S-box file
 
         sBox(sBoxFile);
-
+/*
         Scanner scan = new Scanner(System.in);
 
         //get input of plaintext and key files
@@ -18,7 +18,7 @@ public class AES {
         String filename2 = scan.nextLine();
 
         //process file1 and file2
-
+*/
     }//end main
 
     public static String[][] sBox(String sboxFile) {
