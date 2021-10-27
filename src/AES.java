@@ -34,16 +34,15 @@ public class AES {
             inFile = new BufferedReader(new FileReader(sboxFile));
             nextLine = inFile.readLine();
             int line = 1;//
-            int col = 0;
+
+            int col = 0,row = 0;
             while (nextLine != null) {
                 if(line%2==0){
                     //a new col
-
+                    row++;
                 }
-                int i = 0;
                 inTokens= nextLine.split(" ");
-
-
+                
 
                 nextLine = inFile.readLine();
                 line++;
