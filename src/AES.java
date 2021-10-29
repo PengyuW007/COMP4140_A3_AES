@@ -5,49 +5,29 @@ public class AES {
 
     public static void main(String[] args) {
 
-        String sBoxFile = "sbox.txt";//name of the S-box file
-        String inv_sboxFile = "inv_sbox.txt";
-
+        /****
+         * Initialize sBox and inv_sBox
+         */
         String sbox[][] = sBox();
         String inv_sbox[][] = inv_sBox();
 
-
-        Scanner scan = new Scanner(System.in);
-
-        //get input of plaintext and key files
-        System.out.println("Please type the name of the PLAINTEXT file: ");
-        String filename1 = scan.nextLine();
-        System.out.println("Please type the name of the KEY file: ");
-        String filename2 = scan.nextLine();
+        //String plaintext = args[0];
+        //String key = args[1];
+        String plaintext = "test1plaintext.txt";
+        String key = "test1key.txt";
 
         //process file1 and file2
 
 
 
-        /*
-        for (int i = 0; i < sbox.length; i++) {
-            System.out.println();
-            for (int j = 0; j < sbox.length; j++) {
-                System.out.print(sbox[i][j] + " ");
-            }
-        }
+        printBox(sbox);
 
-        System.out.println();
-
-        for (int i = 0; i < sbox.length; i++) {
-            System.out.println();
-            for (int j = 0; j < sbox.length; j++) {
-                System.out.print(inv_sbox[i][j] + " ");
-            }
-        }
-        System.out.println();
-*/
     }//end main
 
-    public static String[][] inv_sBox(){
+    public static String[][] inv_sBox() {
         String inv_sbox[][] = new String[16][16];
 
-        String[]data = { "52", "09", "6a", "d5", "30", "36", "a5", "38", "bf", "40", "a3", "9e", "81", "f3", "d7", "fb",
+        String[] data = {"52", "09", "6a", "d5", "30", "36", "a5", "38", "bf", "40", "a3", "9e", "81", "f3", "d7", "fb",
                 "7c", "e3", "39", "82", "9b", "2f", "ff", "87", "34", "8e", "43", "44", "c4", "de", "e9", "cb",
                 "54", "7b", "94", "32", "a6", "c2", "23", "3d", "ee", "4c", "95", "0b", "42", "fa", "c3", "4e",
                 "08", "2e", "a1", "66", "28", "d9", "24", "b2", "76", "5b", "a2", "49", "6d", "8b", "d1", "25",
@@ -63,9 +43,9 @@ public class AES {
                 "60", "51", "7f", "a9", "19", "b5", "4a", "0d", "2d", "e5", "7a", "9f", "93", "c9", "9c", "ef",
                 "a0", "e0", "3b", "4d", "ae", "2a", "f5", "b0", "c8", "eb", "bb", "3c", "83", "53", "99", "61",
                 "17", "2b", "04", "7e", "ba", "77", "d6", "26", "e1", "69", "14", "63", "55", "21", "0c", "7d"};
-            return oneToTwo(data,inv_sbox);
+        return oneToTwo(data, inv_sbox);
 
-    }
+    }//end inv_sBox
 
     public static String[][] sBox() {
         String sbox[][] = new String[16][16];
@@ -89,7 +69,7 @@ public class AES {
 
 
         return oneToTwo(data, sbox);
-    }
+    }//end sBox
 
     private static String[][] oneToTwo(String[] data, String[][] sbox) {
         int count = 0;
@@ -104,7 +84,7 @@ public class AES {
         }
 
         return sbox;
-    }
+    }//end oneToTwo
 
     public static void processPlaintext(String plaintext) {
         BufferedReader inFile;
@@ -114,4 +94,14 @@ public class AES {
 
 
     }//end processPlaintext
+
+    public static void printBox(String [][]sBox){
+        for (int i = 0; i < sBox.length; i++) {
+            System.out.println();
+            for (int j = 0; j < sBox[0].length; j++) {
+                System.out.print(sBox[i][j] + " ");
+            }
+        }
+        System.out.println();
+    }//end printBox
 }
