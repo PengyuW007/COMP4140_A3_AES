@@ -126,11 +126,8 @@ public class AES {
 
         try {
             inFile = new BufferedReader(new FileReader(plaintext));
-
             nextLine = inFile.readLine();
-
             inTokens = nextLine.trim().split(" ");
-
 
             for (int i = 0; i < inTokens.length; i++) {
                 hexInts[i] = Integer.parseInt(inTokens[i], 16);
@@ -145,15 +142,16 @@ public class AES {
         }
 
         return hexStrings;
-
     }//end processPlaintext
 
-    public static String[] SubBytes(String[] text) {
-        for (int i = 0; i < text.length; i++) {
-
+    public static String[][] SubBytes(String[][] state,String[][]s_Box) {
+        for (int i = 0; i < state.length; i++) {
+            for(int j = 0;j< state[0].length;j++){
+                
+            }
         }
 
-        return text;
+        return state;
     }//end SubBytes
 
     public static void print2DArray(String[][] twoDArray) {
