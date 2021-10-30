@@ -17,8 +17,7 @@ public class AES {
         String key = "test1key.txt";
 
         //process file1 and file2
-
-
+        processPlaintext(plaintext);
 
         printBox(sbox);
 
@@ -86,16 +85,30 @@ public class AES {
         return sbox;
     }//end oneToTwo
 
-    public static void processPlaintext(String plaintext) {
+    public static String[] processPlaintext(String plaintext) {
         BufferedReader inFile;
         String nextLine;
+        String inTokens[]={};
 
         System.out.println("Processing file " + plaintext + "...");
 
+        try {
+            inFile = new BufferedReader(new FileReader(plaintext));
+
+            nextLine = inFile.readLine();
+
+            inTokens = nextLine.trim().split(" ");
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            System.out.println(e.getStackTrace());
+        }
+
+        return inTokens;
 
     }//end processPlaintext
 
-    public static void printBox(String [][]sBox){
+    public static void printBox(String[][] sBox) {
         for (int i = 0; i < sBox.length; i++) {
             System.out.println();
             for (int j = 0; j < sBox[0].length; j++) {
