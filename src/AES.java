@@ -13,13 +13,14 @@ public class AES {
 
         //String plaintext = args[0];
         //String key = args[1];
-        String plaintext = "test1plaintext.txt";
-        String key = "test1key.txt";
+        String plaintextFile = "test1plaintext.txt";
+        String keyFile = "test1key.txt";
 
         //process file1 and file2
-        processPlaintext(plaintext);
+        String plaintext[] = processFile(plaintextFile);
+        String key[] = processFile(keyFile);
 
-        printBox(sbox);
+        //printBox(sbox);
 
     }//end main
 
@@ -74,21 +75,26 @@ public class AES {
         int count = 0;
         int row = sbox.length;
         int col = sbox[0].length;
+        String hex[][] = new String[16][16];
 
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
                 sbox[i][j] = data[count];
+               int parseInt = Integer.parseInt(sbox[i][j],16);
+                hex[i][j]=Integer.toHexString(parseInt);
                 count++;
             }
         }
 
-        return sbox;
+        return hex;
     }//end oneToTwo
 
-    public static String[] processPlaintext(String plaintext) {
+    public static String[] processFile(String plaintext) {
         BufferedReader inFile;
         String nextLine;
-        String inTokens[]={};
+        String inTokens[];
+        String hexStrings[] = new String[16];
+        int hexInts[]=new int[16];
 
         System.out.println("Processing file " + plaintext + "...");
 
@@ -99,14 +105,30 @@ public class AES {
 
             inTokens = nextLine.trim().split(" ");
 
+
+            for(int i = 0;i<inTokens.length;i++){
+                hexInts[i] = Integer.parseInt(inTokens[i], 16);
+                String hexString = Integer.toHexString(hexInts[i]);
+                hexStrings[i]=hexString;
+                //System.out.println(hexStrings[i]);
+            }
+
         } catch (IOException e) {
             System.out.println(e.getMessage());
             System.out.println(e.getStackTrace());
         }
 
-        return inTokens;
+        return hexStrings;
 
     }//end processPlaintext
+
+    public static String []SubBytes(String[]text){
+        for(int i = 0;i< text.length;i++){
+
+        }
+
+        return text;
+    }//end SubBytes
 
     public static void printBox(String[][] sBox) {
         for (int i = 0; i < sBox.length; i++) {
