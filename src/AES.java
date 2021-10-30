@@ -5,9 +5,9 @@ public class AES {
 
     public static void main(String[] args) {
 
-        /****
+        /******************************
          * Initialize sBox and inv_sBox
-         */
+         ******************************/
         String sbox[][] = sBox();
         String inv_sbox[][] = inv_sBox();
 
@@ -16,16 +16,19 @@ public class AES {
         String plaintextFile = "test1plaintext.txt";
         String keyFile = "test1key.txt";
 
-        //process file1 and file2
+        /***************************
+         * process file1 and file2
+         ***************************/
+        //process plaintext
         System.out.println("Plaintext");
         String plaintext[] = processFile(plaintextFile);
         String inputArray[][] = new String[4][4];
-        String stateArrayTemp[][] = oneToTwo(plaintext,inputArray);
-        
+        String stateArrayTemp[][] = oneToTwo(plaintext, inputArray);
         String stateArray[][] = rotate2DArray(stateArrayTemp);
         print2DArray(stateArray);
 
 
+        //process key text
         System.out.println("Key");
         String key[] = processFile(keyFile);
 
@@ -82,15 +85,15 @@ public class AES {
 
     private static String[][] oneToTwo(String[] data, String[][] twoD) {
         int count = 0;
-        int row = (int)Math.sqrt(data.length);
+        int row = (int) Math.sqrt(data.length);
         int col = row;
         String hex[][] = new String[row][col];
 
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
                 twoD[i][j] = data[count];
-               int parseInt = Integer.parseInt(twoD[i][j],16);
-                hex[i][j]=Integer.toHexString(parseInt);
+                int parseInt = Integer.parseInt(twoD[i][j], 16);
+                hex[i][j] = Integer.toHexString(parseInt);
                 count++;
             }
         }
@@ -99,16 +102,16 @@ public class AES {
     }//end oneToTwo
 
     //do the rotation from vertical to horizontal
-    private static String [][]rotate2DArray(String [][]arr){
-        for(int i = 0;i<arr.length;i++){
+    private static String[][] rotate2DArray(String[][] arr) {
+        for (int i = 0; i < arr.length; i++) {
             // [0][1],[1][0] switch
             // [0][2],[2][0] switch
             // [1][2],[2][1] switch
             // j<i, otherwise it switched back
-            for(int j = 0;j<i;j++){
+            for (int j = 0; j < i; j++) {
                 String temp = arr[i][j];
                 arr[i][j] = arr[j][i];
-                arr[j][i]=temp;
+                arr[j][i] = temp;
             }
         }
         return arr;
@@ -119,9 +122,7 @@ public class AES {
         String nextLine;
         String inTokens[];
         String hexStrings[] = new String[16];
-        int hexInts[]=new int[16];
-
-        //System.out.println("Processing file " + plaintext + "...");
+        int hexInts[] = new int[16];
 
         try {
             inFile = new BufferedReader(new FileReader(plaintext));
@@ -131,10 +132,10 @@ public class AES {
             inTokens = nextLine.trim().split(" ");
 
 
-            for(int i = 0;i<inTokens.length;i++){
+            for (int i = 0; i < inTokens.length; i++) {
                 hexInts[i] = Integer.parseInt(inTokens[i], 16);
                 String hexString = Integer.toHexString(hexInts[i]);
-                hexStrings[i]=hexString;
+                hexStrings[i] = hexString;
                 System.out.print(hexStrings[i]);
             }
             System.out.println();
@@ -147,8 +148,8 @@ public class AES {
 
     }//end processPlaintext
 
-    public static String []SubBytes(String[]text){
-        for(int i = 0;i< text.length;i++){
+    public static String[] SubBytes(String[] text) {
+        for (int i = 0; i < text.length; i++) {
 
         }
 
