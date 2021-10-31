@@ -25,7 +25,8 @@ public class AES {
         String inputArray[][] = new String[4][4];
         String stateArrayTemp[][] = oneToTwo(plaintext, inputArray);
         String stateArray[][] = rotate2DArray(stateArrayTemp);
-        print2DArray(stateArray);
+        String subBytedArray[][] = SubBytes(stateArray, sbox);
+        print2DArray(subBytedArray);
 
 
         //process key text
@@ -87,18 +88,18 @@ public class AES {
         int count = 0;
         int row = (int) Math.sqrt(data.length);
         int col = row;
-        String hex[][] = new String[row][col];
+        //String hex[][] = new String[row][col];
 
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
                 twoD[i][j] = data[count];
-                int parseInt = Integer.parseInt(twoD[i][j], 16);
-                hex[i][j] = Integer.toHexString(parseInt);
+                //int parseInt = Integer.parseInt(twoD[i][j], 16);
+                //hex[i][j] = Integer.toHexString(parseInt);
                 count++;
             }
         }
 
-        return hex;
+        return twoD;
     }//end oneToTwo
 
     //do the rotation from vertical to horizontal
@@ -120,8 +121,8 @@ public class AES {
     public static String[] processFile(String plaintext) {
         BufferedReader inFile;
         String nextLine;
-        String inTokens[];
-        String hexStrings[] = new String[16];
+        String inTokens[] = new String[16];
+        //String hexStrings[] = new String[16];
         int hexInts[] = new int[16];
 
         try {
@@ -130,10 +131,11 @@ public class AES {
             inTokens = nextLine.trim().split(" ");
 
             for (int i = 0; i < inTokens.length; i++) {
-                hexInts[i] = Integer.parseInt(inTokens[i], 16);
-                String hexString = Integer.toHexString(hexInts[i]);
-                hexStrings[i] = hexString;
-                System.out.print(hexStrings[i]);
+                //hexInts[i] = Integer.parseInt(inTokens[i], 16);
+                //String hexString = Integer.toHexString(hexInts[i]);
+                //hexStrings[i] = hexString;
+                System.out.print(inTokens[i]);
+
             }
             System.out.println();
         } catch (IOException e) {
@@ -141,13 +143,50 @@ public class AES {
             System.out.println(e.getStackTrace());
         }
 
-        return hexStrings;
+        return inTokens;
     }//end processPlaintext
 
-    public static String[][] SubBytes(String[][] state,String[][]s_Box) {
+    public static String[][] SubBytes(String[][] state, String[][] s_Box) {
+        int k = 0;
         for (int i = 0; i < state.length; i++) {
-            for(int j = 0;j< state[0].length;j++){
-                
+            for (int j = 0; j < state[0].length; j++) {
+                String s = state[i][j];
+                char r = s.charAt(0);//row
+
+                char c = s.charAt(1);//col
+
+                int row = 0, col = 0;
+
+                if (r == 'a') {
+                    row = 10;
+                } else if (c == 'a') {
+                    col = 10;
+                } else if (r == 'b') {
+                    row = 11;
+                } else if (c == 'b') {
+                    col = 11;
+                } else if (r == 'c') {
+                    row = 12;
+                } else if (c == 'c') {
+                    col = 12;
+                } else if (r == 'd') {
+                    row = 13;
+                } else if (c == 'd') {
+                    col = 13;
+                } else if (r == 'e') {
+                    row = 14;
+                } else if (c == 'e') {
+                    col = 14;
+                } else if (r == 'f') {
+                    row = 15;
+                } else if (c == 'f') {
+                    col = 15;
+                } else {
+                    row = r - '0';
+                    col = c - '0';
+                }//end if-else-if block
+
+                state[i][j] = s_Box[row][col];
             }
         }
 
