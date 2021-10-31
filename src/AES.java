@@ -28,12 +28,11 @@ public class AES {
         String[][] subByteArray = SubBytes(stateArray, sbox);
         print2DArray(subByteArray);
 
-
         //process key text
         System.out.println("Key");
         String[] key = processFile(keyFile);
 
-        //printBox(sbox);
+
 
     }//end main
 
