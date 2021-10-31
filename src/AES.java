@@ -223,9 +223,12 @@ public class AES {
                 state[i][j] = s_Box[row][col];
             }
         }
-
         return state;
     }//end SubBytes
+
+    public static String[][] InvSubBytes(String[][] state, String[][] inv_Box){
+        return SubBytes(state,inv_Box);
+    }//end InvSubBytes
 
     public static void print2DArray(String[][] twoDArray) {
         for (int i = 0; i < twoDArray.length; i++) {
