@@ -31,9 +31,9 @@ public class AES {
         print2DArray(subByteArray);
 
         String[][] shiftRowsArray = ShiftRows(subByteArray);
-       // print2DArray(shiftRowsArray);
+        print2DArray(shiftRowsArray);
 
-        String[][]invShiftRowsArray = InvShiftRows(subByteArray);
+        String[][] invShiftRowsArray = InvShiftRows(subByteArray);
         print2DArray(invShiftRowsArray);
         //process key text
         System.out.println("Key");
