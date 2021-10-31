@@ -10,6 +10,7 @@ public class AES {
          ******************************/
         String sbox[][] = sBox();
         String inv_sbox[][] = inv_sBox();
+        //print2DArray(sbox);
 
         //String plaintext = args[0];
         //String key = args[1];
@@ -25,8 +26,9 @@ public class AES {
         String inputArray[][] = new String[4][4];
         String stateArrayTemp[][] = oneToTwo(plaintext, inputArray);
         String stateArray[][] = rotate2DArray(stateArrayTemp);
-        String subBytedArray[][] = SubBytes(stateArray, sbox);
-        print2DArray(subBytedArray);
+        print2DArray(stateArray);
+        String subByteArray[][] = SubBytes(stateArray, sbox);
+        print2DArray(subByteArray);
 
 
         //process key text
@@ -148,15 +150,57 @@ public class AES {
 
     public static String[][] SubBytes(String[][] state, String[][] s_Box) {
         int k = 0;
+        int row = 0, col = 0;
+        //System.out.println(s_Box[10][8]);
+        int parseInt = Integer.parseInt(s_Box[10][8], 16);
+        System.out.println(parseInt);
         for (int i = 0; i < state.length; i++) {
             for (int j = 0; j < state[0].length; j++) {
                 String s = state[i][j];
+                //int parseInt = Integer.parseInt(s,16);
                 char r = s.charAt(0);//row
-
                 char c = s.charAt(1);//col
-
-                int row = 0, col = 0;
-
+                row = r - '0';
+                col = c - '0';
+                /*
+                if (r == '1') {
+                    row = 1;
+                } else if (c == '1') {
+                    col = 1;
+                } else if (r == '2') {
+                    row = 2;
+                } else if (c == '2') {
+                    col = 2;
+                } else if (r == '3') {
+                    row = 3;
+                } else if (c == '3') {
+                    col = 3;
+                } else if (r == '4') {
+                    row = 4;
+                } else if (c == '4') {
+                    col = 4;
+                } else if (r == '5') {
+                    row = 5;
+                } else if (c == '5') {
+                    col = 5;
+                } else if (r == '6') {
+                    row = 6;
+                } else if (c == '6') {
+                    col = 6;
+                } else if (r == '7') {
+                    row = 7;
+                } else if (c == '7') {
+                    col = 7;
+                } else if (r == '8') {
+                    row = 8;
+                } else if (c == '8') {
+                    col = 8;
+                } else if (r == '9') {
+                    row = 9;
+                } else if (c == '9') {
+                    col = 9;
+                } else
+                */
                 if (r == 'a') {
                     row = 10;
                 } else if (c == 'a') {
@@ -181,11 +225,8 @@ public class AES {
                     row = 15;
                 } else if (c == 'f') {
                     col = 15;
-                } else {
-                    row = r - '0';
-                    col = c - '0';
-                }//end if-else-if block
-
+                } //end if-else-if block
+                
                 state[i][j] = s_Box[row][col];
             }
         }
