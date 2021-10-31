@@ -1,5 +1,4 @@
 import java.io.*;
-import java.util.*;
 
 public class AES {
 
@@ -8,9 +7,8 @@ public class AES {
         /******************************
          * Initialize sBox and inv_sBox
          ******************************/
-        String sbox[][] = sBox();
-        String inv_sbox[][] = inv_sBox();
-        //print2DArray(sbox);
+        String[][] sbox = sBox();
+        String[][] inv_sbox = inv_sBox();
 
         //String plaintext = args[0];
         //String key = args[1];
@@ -22,25 +20,25 @@ public class AES {
          ***************************/
         //process plaintext
         System.out.println("Plaintext");
-        String plaintext[] = processFile(plaintextFile);
-        String inputArray[][] = new String[4][4];
-        String stateArrayTemp[][] = oneToTwo(plaintext, inputArray);
-        String stateArray[][] = rotate2DArray(stateArrayTemp);
+        String[] plaintext = processFile(plaintextFile);
+        String[][] inputArray = new String[4][4];
+        String[][] stateArrayTemp = oneToTwo(plaintext, inputArray);
+        String[][] stateArray = rotate2DArray(stateArrayTemp);
         print2DArray(stateArray);
-        String subByteArray[][] = SubBytes(stateArray, sbox);
+        String[][] subByteArray = SubBytes(stateArray, sbox);
         print2DArray(subByteArray);
 
 
         //process key text
         System.out.println("Key");
-        String key[] = processFile(keyFile);
+        String[] key = processFile(keyFile);
 
         //printBox(sbox);
 
     }//end main
 
     public static String[][] inv_sBox() {
-        String inv_sbox[][] = new String[16][16];
+        String[][] inv_sbox = new String[16][16];
 
         String[] data = {"52", "09", "6a", "d5", "30", "36", "a5", "38", "bf", "40", "a3", "9e", "81", "f3", "d7", "fb",
                 "7c", "e3", "39", "82", "9b", "2f", "ff", "87", "34", "8e", "43", "44", "c4", "de", "e9", "cb",
@@ -63,7 +61,7 @@ public class AES {
     }//end inv_sBox
 
     public static String[][] sBox() {
-        String sbox[][] = new String[16][16];
+        String[][] sbox = new String[16][16];
 
         String[] data = {"63", "7c", "77", "7b", "f2", "6b", "6f", "c5", "30", "01", "67", "2b", "fe", "d7", "ab", "76",
                 "ca", "82", "c9", "7d", "fa", "59", "47", "f0", "ad", "d4", "a2", "af", "9c", "a4", "72", "c0",
@@ -123,9 +121,9 @@ public class AES {
     public static String[] processFile(String plaintext) {
         BufferedReader inFile;
         String nextLine;
-        String inTokens[] = new String[16];
+        String[] inTokens = new String[16];
         //String hexStrings[] = new String[16];
-        int hexInts[] = new int[16];
+        int[] hexInts = new int[16];
 
         try {
             inFile = new BufferedReader(new FileReader(plaintext));
@@ -143,7 +141,7 @@ public class AES {
         } catch (IOException e) {
             System.out.println(e.getMessage());
             System.out.println(e.getStackTrace());
-        }
+        }//end try-catch
 
         return inTokens;
     }//end processPlaintext
