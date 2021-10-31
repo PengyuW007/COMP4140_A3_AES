@@ -149,19 +149,14 @@ public class AES {
     }//end processPlaintext
 
     public static String[][] SubBytes(String[][] state, String[][] s_Box) {
-        int k = 0;
-        int row = 0, col = 0;
-        //System.out.println(s_Box[10][8]);
-        int parseInt = Integer.parseInt(s_Box[10][8], 16);
-        System.out.println(parseInt);
         for (int i = 0; i < state.length; i++) {
             for (int j = 0; j < state[0].length; j++) {
                 String s = state[i][j];
-                //int parseInt = Integer.parseInt(s,16);
                 char r = s.charAt(0);//row
                 char c = s.charAt(1);//col
-                row = r - '0';
-                col = c - '0';
+
+                int row = r - '0';
+                int col = c - '0';
                 /*
                 if (r == '1') {
                     row = 1;
@@ -226,7 +221,7 @@ public class AES {
                 } else if (c == 'f') {
                     col = 15;
                 } //end if-else-if block
-                
+
                 state[i][j] = s_Box[row][col];
             }
         }
