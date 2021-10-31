@@ -23,16 +23,23 @@ public class AES {
         String[] plaintext = processFile(plaintextFile);
         String[][] inputArray = new String[4][4];
         String[][] stateArrayTemp = oneToTwo(plaintext, inputArray);
+
         String[][] stateArray = rotate2DArray(stateArrayTemp);
         print2DArray(stateArray);
+
         String[][] subByteArray = SubBytes(stateArray, sbox);
         print2DArray(subByteArray);
 
+        String[][] shiftRowsArray = ShiftRows(subByteArray);
+       // print2DArray(shiftRowsArray);
+
+        String[][]invShiftRowsArray = InvShiftRows(subByteArray);
+        print2DArray(invShiftRowsArray);
         //process key text
         System.out.println("Key");
         String[] key = processFile(keyFile);
 
-
+        ShiftRows(stateArray);
 
     }//end main
 
@@ -225,10 +232,53 @@ public class AES {
         return state;
     }//end SubBytes
 
-    public static String[][] InvSubBytes(String[][] state, String[][] inv_Box){
-        return SubBytes(state,inv_Box);
+    public static String[][] InvSubBytes(String[][] state, String[][] inv_Box) {
+        return SubBytes(state, inv_Box);
     }//end InvSubBytes
 
+    /****************************
+     * ShiftRows and InvShiftRows
+     ****************************/
+    /********* ShiftRows ********/
+    public static String[][] ShiftRows(String[][] state) {
+        for (int i = 0; i < state.length; i++) {
+            state[i] = shiftRow(state[i], i);
+        }
+        return state;
+    }//end ShiftRows
+
+    private static String[] shiftRow(String[] arr, int shift) {
+        //arr: 1 2 3 4 5,shift 3
+        //tmp: 4 5 1 2 3
+        String[] temp = new String[arr.length];
+
+        System.arraycopy(arr, shift, temp, 0, arr.length - shift);
+        System.arraycopy(arr, 0, temp, arr.length - shift, shift);
+        return temp;
+    }//end leftShiftRow
+
+    /********* InvShiftRows ******/
+    public static String[][] InvShiftRows(String[][] state) {
+        for (int i = 0; i < state.length; i++) {
+            state[i] = invShiftRow(state[i], i);
+        }
+        return state;
+    }//end InvShiftRows
+
+    private static String[] invShiftRow(String[] arr, int shift) {
+        //right shifted
+        //arr: 1 2 3 4 5,shift 3
+        //tmp: 3 4 5 1 2
+        String[] temp = new String[arr.length];
+
+        System.arraycopy(arr, arr.length - shift, temp, 0, shift);
+        System.arraycopy(arr, 0, temp, shift, arr.length - shift);
+        return temp;
+    }//end invShiftRow
+
+    /*********************
+     * other helper method
+     *********************/
     public static void print2DArray(String[][] twoDArray) {
         for (int i = 0; i < twoDArray.length; i++) {
             System.out.println();
