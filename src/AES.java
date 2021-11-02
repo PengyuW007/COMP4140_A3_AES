@@ -159,78 +159,34 @@ public class AES {
                 char r = s.charAt(0);//row
                 char c = s.charAt(1);//col
 
-                int row = r - '0';
-                int col = c - '0';
-                /*
-                if (r == '1') {
-                    row = 1;
-                } else if (c == '1') {
-                    col = 1;
-                } else if (r == '2') {
-                    row = 2;
-                } else if (c == '2') {
-                    col = 2;
-                } else if (r == '3') {
-                    row = 3;
-                } else if (c == '3') {
-                    col = 3;
-                } else if (r == '4') {
-                    row = 4;
-                } else if (c == '4') {
-                    col = 4;
-                } else if (r == '5') {
-                    row = 5;
-                } else if (c == '5') {
-                    col = 5;
-                } else if (r == '6') {
-                    row = 6;
-                } else if (c == '6') {
-                    col = 6;
-                } else if (r == '7') {
-                    row = 7;
-                } else if (c == '7') {
-                    col = 7;
-                } else if (r == '8') {
-                    row = 8;
-                } else if (c == '8') {
-                    col = 8;
-                } else if (r == '9') {
-                    row = 9;
-                } else if (c == '9') {
-                    col = 9;
-                } else
-                */
-                if (r == 'a') {
-                    row = 10;
-                } else if (c == 'a') {
-                    col = 10;
-                } else if (r == 'b') {
-                    row = 11;
-                } else if (c == 'b') {
-                    col = 11;
-                } else if (r == 'c') {
-                    row = 12;
-                } else if (c == 'c') {
-                    col = 12;
-                } else if (r == 'd') {
-                    row = 13;
-                } else if (c == 'd') {
-                    col = 13;
-                } else if (r == 'e') {
-                    row = 14;
-                } else if (c == 'e') {
-                    col = 14;
-                } else if (r == 'f') {
-                    row = 15;
-                } else if (c == 'f') {
-                    col = 15;
-                } //end if-else-if block
-
+                int row = rcTransform(r);
+                int col = rcTransform(c);
+                
                 state[i][j] = s_Box[row][col];
             }
         }
         return state;
     }//end SubBytes
+
+    private static int rcTransform(char c){
+        int val = c - '0';
+
+        if (c == 'a') {
+            val = 10;
+        } else if (c == 'b') {
+            val = 11;
+        }  else if (c == 'c') {
+            val = 12;
+        } else if (c == 'd') {
+            val = 13;
+        } else if (c == 'e') {
+            val = 14;
+        } else if (c == 'f') {
+            val = 15;
+        } //end if-else-if block
+
+        return val;
+    }
 
     public static String[][] InvSubBytes(String[][] state, String[][] inv_Box) {
         return SubBytes(state, inv_Box);
