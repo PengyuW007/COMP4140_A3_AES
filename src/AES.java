@@ -35,6 +35,10 @@ public class AES {
 
         String[][] invShiftRowsArray = InvShiftRows(subByteArray);
         print2DArray(invShiftRowsArray);
+
+        String[][]matrixMulp = MixColumns(shiftRowsArray);
+        print2DArray(matrixMulp);
+
         //process key text
         System.out.println("Key");
         String[] key = processFile(keyFile);
@@ -43,6 +47,9 @@ public class AES {
 
     }//end main
 
+    /***********************
+     * SBox Methods
+     ***********************/
     public static String[][] inv_sBox() {
         String[][] inv_sbox = new String[16][16];
 
@@ -90,6 +97,9 @@ public class AES {
         return oneToTwo(data, sbox);
     }//end sBox
 
+    /***************************
+     * Functions for 2D arrays
+     ***************************/
     private static String[][] oneToTwo(String[] data, String[][] twoD) {
         int count = 0;
         int row = (int) Math.sqrt(data.length);
@@ -152,6 +162,9 @@ public class AES {
         return inTokens;
     }//end processPlaintext
 
+    /************************
+     * SubBytes
+     ************************/
     public static String[][] SubBytes(String[][] state, String[][] s_Box) {
         for (int i = 0; i < state.length; i++) {
             for (int j = 0; j < state[0].length; j++) {
@@ -168,14 +181,14 @@ public class AES {
         return state;
     }//end SubBytes
 
-    private static int rcTransform(char c){
+    private static int rcTransform(char c) {
         int val = c - '0';
 
         if (c == 'a') {
             val = 10;
         } else if (c == 'b') {
             val = 11;
-        }  else if (c == 'c') {
+        } else if (c == 'c') {
             val = 12;
         } else if (c == 'd') {
             val = 13;
@@ -231,6 +244,51 @@ public class AES {
         System.arraycopy(arr, 0, temp, shift, arr.length - shift);
         return temp;
     }//end invShiftRow
+
+    /******************************
+     * MixColumns and InvMixColumns
+     ******************************/
+    public static String[][] MixColumns(String[][] matrix) {
+        String [][]preMatrix = {{"02","03","01","01"},
+                                {"01","02","03","01"},
+                                {"01","01","02","03"},
+                                {"03","01","01","02"}};
+
+        return matrixMul(preMatrix,matrix);
+    }
+
+    private static String[][] matrixMul(String[][] preMatrix, String[][] matrix) {
+        String[][] res = new String[4][4];
+        int len = matrix.length;
+        int [][]ints = new int[4][4];
+
+        int [][]preM = stringToInt(preMatrix);
+        int [][]m = stringToInt(matrix);
+
+        for(int i = 0;i<len;i++){
+            for(int j = 0;j<len;j++){
+                for(int k = 0;k<len;k++){
+                    ints[i][j]^=preM[i][k]*m[k][j];
+                    res[i][j]=ints[i][j]+"";
+                }
+            }
+        }
+
+        return res;
+    }
+
+    private static int[][]stringToInt(String[][] strings){
+        int strLen = strings.length;
+        int [][]hexInts = new int[strLen][strLen];
+
+        for(int i = 0;i<strLen;i++){
+            for(int j = 0;j<strLen;j++){
+                hexInts[i][j] = Integer.parseInt(strings[i][j], 16);
+            }
+        }
+
+        return hexInts;
+    }
 
     /*********************
      * other helper method
