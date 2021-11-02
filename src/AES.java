@@ -161,7 +161,7 @@ public class AES {
 
                 int row = rcTransform(r);
                 int col = rcTransform(c);
-                
+
                 state[i][j] = s_Box[row][col];
             }
         }
