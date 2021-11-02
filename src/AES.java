@@ -36,7 +36,7 @@ public class AES {
         String[][] invShiftRowsArray = InvShiftRows(subByteArray);
         print2DArray(invShiftRowsArray);
 
-        String[][]matrixMulp = MixColumns(shiftRowsArray);
+        String[][] matrixMulp = MixColumns(shiftRowsArray);
         print2DArray(matrixMulp);
 
         //process key text
@@ -249,41 +249,46 @@ public class AES {
      * MixColumns and InvMixColumns
      ******************************/
     public static String[][] MixColumns(String[][] matrix) {
-        String [][]preMatrix = {{"02","03","01","01"},
-                                {"01","02","03","01"},
-                                {"01","01","02","03"},
-                                {"03","01","01","02"}};
+        String[][] preMatrix = {{"02", "03", "01", "01"},
+                {"01", "02", "03", "01"},
+                {"01", "01", "02", "03"},
+                {"03", "01", "01", "02"}};
 
-        return matrixMul(preMatrix,matrix);
+        return matrixMul(preMatrix, matrix);
     }
 
     private static String[][] matrixMul(String[][] preMatrix, String[][] matrix) {
         String[][] res = new String[4][4];
         int len = matrix.length;
-        int [][]ints = new int[4][4];
+        int[][] ints = new int[4][4];
 
-        int [][]preM = stringToInt(preMatrix);
-        int [][]m = stringToInt(matrix);
+        int[][] preM = stringToInt(preMatrix);
+        int[][] m = stringToInt(matrix);
 
-        for(int i = 0;i<len;i++){
-            for(int j = 0;j<len;j++){
-                for(int k = 0;k<len;k++){
-                    ints[i][j]^=preM[i][k]*m[k][j];
-                    res[i][j]=ints[i][j]+"";
+        for (int i = 0; i < len; i++) {
+            for (int j = 0; j < len; j++) {
+                String hexString = "";
+                for (int k = 0; k < len; k++) {
+                    ints[i][j] ^= preM[i][k] * m[k][j];
+                    hexString = Integer.toHexString(ints[i][j]);
+                    res[i][j]=hexString;
                 }
             }
         }
-
+        //System.out.println();
         return res;
     }
 
-    private static int[][]stringToInt(String[][] strings){
+    private static int[][] stringToInt(String[][] strings) {
         int strLen = strings.length;
-        int [][]hexInts = new int[strLen][strLen];
+        int[][] hexInts = new int[strLen][strLen];
 
-        for(int i = 0;i<strLen;i++){
-            for(int j = 0;j<strLen;j++){
+        for (int i = 0; i < strLen; i++) {
+            //System.out.println();
+            for (int j = 0; j < strLen; j++) {
                 hexInts[i][j] = Integer.parseInt(strings[i][j], 16);
+                //String s = Integer.toHexString(hexInts[i][j]);
+                //System.out.print(s+" ");
             }
         }
 
