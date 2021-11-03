@@ -25,16 +25,16 @@ public class AES {
         String[][] stateArrayTemp = oneToTwo(plaintext, inputArray);
 
         String[][] stateArray = rotate2DArray(stateArrayTemp);
-        print2DArray(stateArray);
+        // print2DArray(stateArray);
 
         String[][] subByteArray = SubBytes(stateArray, sbox);
-        print2DArray(subByteArray);
+        //print2DArray(subByteArray);
 
         String[][] shiftRowsArray = ShiftRows(subByteArray);
         print2DArray(shiftRowsArray);
 
         String[][] invShiftRowsArray = InvShiftRows(subByteArray);
-        print2DArray(invShiftRowsArray);
+        //print2DArray(invShiftRowsArray);
 
         String[][] matrixMulp = MixColumns(shiftRowsArray);
         print2DArray(matrixMulp);
@@ -269,14 +269,24 @@ public class AES {
             for (int j = 0; j < len; j++) {
                 String hexString = "";
                 for (int k = 0; k < len; k++) {
-                    ints[i][j] ^= preM[i][k] * m[k][j];
-                    hexString = Integer.toHexString(ints[i][j]);
-                    res[i][j]=hexString;
+                    ints[i][j] ^= dotMul(preM[i][k], m[k][j]);//(preM[i][k] * m[k][j]);
                 }
+                hexString = Integer.toHexString(ints[i][j]);
+                res[i][j]=hexString;
             }
         }
-        //System.out.println();
         return res;
+    }//end matrixMul
+
+    private static int dotMul(int a, int b) {
+        int c = a << 1;
+        int and = c & 128;
+        
+        if (and != 0) {
+            c ^=27;
+        }
+
+        return c;
     }
 
     private static int[][] stringToInt(String[][] strings) {
@@ -284,11 +294,8 @@ public class AES {
         int[][] hexInts = new int[strLen][strLen];
 
         for (int i = 0; i < strLen; i++) {
-            //System.out.println();
             for (int j = 0; j < strLen; j++) {
                 hexInts[i][j] = Integer.parseInt(strings[i][j], 16);
-                //String s = Integer.toHexString(hexInts[i][j]);
-                //System.out.print(s+" ");
             }
         }
 
