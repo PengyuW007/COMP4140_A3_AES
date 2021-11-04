@@ -281,7 +281,7 @@ public class AES {
     private static int dotMul(int a, int b) {
         int c = a << 1;
         int and = c & 128;
-        
+
         if (and != 0) {
             c ^=27;
         }
