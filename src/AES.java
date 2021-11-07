@@ -34,6 +34,8 @@ public class AES {
         String[][] keyArray = rotate2DArray(keyArrayTemp);
         print2DArray(keyArray);
 
+
+
 /*
         String[][] subByteArray = SubBytes(stateArray, sbox);
         //print2DArray(subByteArray);
@@ -340,18 +342,42 @@ public class AES {
                 "1B000000", "36000000"};
 
         int hexCons = Integer.parseInt(constant[i], 16);
-        long hexWord = Long.parseLong(subWord,16);
+        long hexWord = Long.parseLong(subWord, 16);
 
         return Long.toHexString(hexCons ^ hexWord);
     }//end constant
 
-    private static String[]wi(String key){
-        String []w = new String[44];
+    private static String[] wI(String[] key, String[][] sBox) {
+        String[] w = new String[44];
+        String tempStr, roTWord, subWord, rConiNk, wiNkStr;
+        long rc, wiNk, temp;
 
-        w[0]=key.substring(0,7);
-        System.out.println(w[0]);
+        //w0~w4
+        for (int i = 0; i < 4; i++) {
+            w[i] = key[i];
+        }
+
+        int k = -1;
+        //w4~w43
+        for (int i = 4; i < 44; i++) {
+            tempStr = w[i - 1];
+            wiNkStr = w[i - 4];
+            wiNk = Long.parseLong(wiNkStr, 16);
+
+            if (i % 4 == 0) {
+                roTWord = RotWord(tempStr);
+                subWord = SubWord(roTWord, sBox);
+                k++;
+                rConiNk = rCon(k, subWord);
+                rc = Long.parseLong(rConiNk, 16);
+                w[i] = Long.toHexString(rc ^ wiNk);
+            }
+            temp = Long.parseLong(tempStr, 16);
+            w[i] = Long.toHexString(temp ^ wiNk);
+        }
+
         return w;
-    }//end wi
+    }//end wI
 
     /*********************
      * other helper method
