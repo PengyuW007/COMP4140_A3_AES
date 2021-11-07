@@ -34,7 +34,9 @@ public class AES {
         String[][] keyArray = rotate2DArray(keyArrayTemp);
         print2DArray(keyArray);
 
+        String[]wi = wI(key,sbox);
 
+        System.out.println(wi.length);
 
 /*
         String[][] subByteArray = SubBytes(stateArray, sbox);
@@ -309,45 +311,7 @@ public class AES {
     /*********************
      * KeyExpansion
      *********************/
-    public static String KeyExpansion(String key) {
-        return key;
-    }//end KeyExpansion
-
-    //RotWord,SubWord,Rcon,Wi
-    private static String RotWord(String temp) {
-        return temp.substring(2) + temp.substring(0, 2);
-    }//end RotWord
-
-    private static String SubWord(String rotWord, String[][] sBox) {
-        String res = "";
-
-        for (int i = 1; i < rotWord.length(); i += 2) {
-            char r = rotWord.charAt(i - 1);
-            char c = rotWord.charAt(i);
-
-            int row = rcTransform(r);
-            int col = rcTransform(c);
-
-            res += sBox[row][col];
-        }
-
-        return res;
-    }//end SubWord
-
-    private static String rCon(int i, String subWord) {
-        String[] constant = {"01000000", "02000000",
-                "04000000", "08000000",
-                "10000000", "20000000",
-                "40000000", "80000000",
-                "1B000000", "36000000"};
-
-        int hexCons = Integer.parseInt(constant[i], 16);
-        long hexWord = Long.parseLong(subWord, 16);
-
-        return Long.toHexString(hexCons ^ hexWord);
-    }//end constant
-
-    private static String[] wI(String[] key, String[][] sBox) {
+    public static String[] wI(String[] key, String[][] sBox) {
         String[] w = new String[44];
         String tempStr, roTWord, subWord, rConiNk, wiNkStr;
         long rc, wiNk, temp;
@@ -378,6 +342,40 @@ public class AES {
 
         return w;
     }//end wI
+
+    //RotWord,SubWord,Rcon,Wi
+    private static String RotWord(String temp) {
+        return temp.substring(2) + temp.substring(0, 2);
+    }//end RotWord
+
+    private static String SubWord(String rotWord, String[][] sBox) {
+        String res = "";
+
+        for (int i = 1; i < rotWord.length(); i += 2) {
+            char r = rotWord.charAt(i - 1);
+            char c = rotWord.charAt(i);
+
+            int row = rcTransform(r);
+            int col = rcTransform(c);
+
+            res += sBox[row][col];
+        }
+
+        return res;
+    }//end SubWord
+
+    private static String rCon(int i, String subWord) {
+        String[] constant = {"01000000", "02000000",
+                "04000000", "08000000",
+                "10000000", "20000000",
+                "40000000", "80000000",
+                "1B000000", "36000000"};
+
+        long hexCons = Long.parseLong(constant[i], 16);
+        long hexWord = Long.parseLong(subWord, 16);
+
+        return Long.toHexString(hexCons ^ hexWord);
+    }//end constant
 
     /*********************
      * other helper method
