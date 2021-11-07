@@ -29,14 +29,10 @@ public class AES {
         //process key text
         System.out.println("Key");
         String[] key = processFile(keyFile);
-        String [][]keyArray2D=new String[4][4];
-        String [][]keyArrayTemp = oneToTwo(key,keyArray2D);
-        String[][] keyArray=rotate2DArray(keyArrayTemp);
+        String[][] keyArray2D = new String[4][4];
+        String[][] keyArrayTemp = oneToTwo(key, keyArray2D);
+        String[][] keyArray = rotate2DArray(keyArrayTemp);
         print2DArray(keyArray);
-
-        String temp = "09cf4f3c";
-        String rotWord=RotWord(temp);
-        String subWord = SubWord(rotWord,sbox);
 
 /*
         String[][] subByteArray = SubBytes(stateArray, sbox);
@@ -278,7 +274,7 @@ public class AES {
                     ints[i][j] ^= dotMul(preM[i][k], m[k][j]);//(preM[i][k] * m[k][j]);
                 }
                 hexString = Integer.toHexString(ints[i][j]);
-                res[i][j]=hexString;
+                res[i][j] = hexString;
             }
         }
         return res;
@@ -289,7 +285,7 @@ public class AES {
         int and = c & 128;
 
         if (and != 0) {
-            c ^=27;
+            c ^= 27;
         }
 
         return c;
@@ -311,43 +307,51 @@ public class AES {
     /*********************
      * KeyExpansion
      *********************/
-    public static String KeyExpansion(String key){
+    public static String KeyExpansion(String key) {
         return key;
     }//end KeyExpansion
 
     //RotWord,SubWord,Rcon,Wi
-    private static String RotWord(String temp){
-        return temp.substring(2)+temp.substring(0,2);
+    private static String RotWord(String temp) {
+        return temp.substring(2) + temp.substring(0, 2);
     }//end RotWord
 
-    private static String SubWord(String rotWord,String [][]sBox){
+    private static String SubWord(String rotWord, String[][] sBox) {
         String res = "";
 
-        for(int i=1;i<rotWord.length();i+=2){
-            char r = rotWord.charAt(i-1);
+        for (int i = 1; i < rotWord.length(); i += 2) {
+            char r = rotWord.charAt(i - 1);
             char c = rotWord.charAt(i);
 
             int row = rcTransform(r);
             int col = rcTransform(c);
 
-            res+=sBox[row][col];
+            res += sBox[row][col];
         }
 
         return res;
     }//end SubWord
 
-    private static String rCon(int i,String subWord){
-        String[] constant={"01000000","02000000",
-                            "04000000","08000000",
-                            "10000000","20000000",
-                            "40000000","80000000",
-                            "1B000000","36000000"};
+    private static String rCon(int i, String subWord) {
+        String[] constant = {"01000000", "02000000",
+                "04000000", "08000000",
+                "10000000", "20000000",
+                "40000000", "80000000",
+                "1B000000", "36000000"};
 
-        int hexCons = Integer.parseInt(constant[i],16);
-        int hexWord = Integer.parseInt(subWord,16);
+        int hexCons = Integer.parseInt(constant[i], 16);
+        long hexWord = Long.parseLong(subWord,16);
 
-        return Integer.toString(hexCons^hexWord);
+        return Long.toHexString(hexCons ^ hexWord);
     }//end constant
+
+    private static String[]wi(String key){
+        String []w = new String[44];
+
+        w[0]=key.substring(0,7);
+        System.out.println(w[0]);
+        return w;
+    }//end wi
 
     /*********************
      * other helper method
