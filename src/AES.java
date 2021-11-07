@@ -35,7 +35,9 @@ public class AES {
         print2DArray(keyArray);
 
         String temp = "09cf4f3c";
-        System.out.println(RotWord(temp));
+        String rotWord=RotWord(temp);
+        String subWord = SubWord(rotWord,sbox);
+
 /*
         String[][] subByteArray = SubBytes(stateArray, sbox);
         //print2DArray(subByteArray);
@@ -318,7 +320,7 @@ public class AES {
         return temp.substring(2)+temp.substring(0,2);
     }//end RotWord
 
-    private static String SubWord(String rotWord){
+    private static String SubWord(String rotWord,String [][]sBox){
         String res = "";
 
         for(int i=1;i<rotWord.length();i+=2){
@@ -327,18 +329,24 @@ public class AES {
 
             int row = rcTransform(r);
             int col = rcTransform(c);
+
+            res+=sBox[row][col];
         }
 
         return res;
     }//end SubWord
 
-    private static String rCon(int i){
+    private static String rCon(int i,String subWord){
         String[] constant={"01000000","02000000",
                             "04000000","08000000",
                             "10000000","20000000",
                             "40000000","80000000",
                             "1B000000","36000000"};
-        return constant[i];
+
+        int hexCons = Integer.parseInt(constant[i],16);
+        int hexWord = Integer.parseInt(subWord,16);
+
+        return Integer.toString(hexCons^hexWord);
     }//end constant
 
     /*********************
