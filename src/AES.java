@@ -16,20 +16,30 @@ public class AES {
         String keyFile = "test1key.txt";
 
         /***************************
-         * process file1 and file2
+         * process file1 and file2,plaintext and key txt files
          ***************************/
         //process plaintext
         System.out.println("Plaintext");
         String[] plaintext = processFile(plaintextFile);
         String[][] inputArray = new String[4][4];
         String[][] stateArrayTemp = oneToTwo(plaintext, inputArray);
-
         String[][] stateArray = rotate2DArray(stateArrayTemp);
-        // print2DArray(stateArray);
+        print2DArray(stateArray);
 
+        //process key text
+        System.out.println("Key");
+        String[] key = processFile(keyFile);
+        String [][]keyArray2D=new String[4][4];
+        String [][]keyArrayTemp = oneToTwo(key,keyArray2D);
+        String[][] keyArray=rotate2DArray(keyArrayTemp);
+        print2DArray(keyArray);
+
+        String temp = "09cf4f3c";
+        System.out.println(RotWord(temp));
+/*
         String[][] subByteArray = SubBytes(stateArray, sbox);
         //print2DArray(subByteArray);
-
+        ShiftRows(stateArray);
         String[][] shiftRowsArray = ShiftRows(subByteArray);
         print2DArray(shiftRowsArray);
 
@@ -38,13 +48,7 @@ public class AES {
 
         String[][] matrixMulp = MixColumns(shiftRowsArray);
         print2DArray(matrixMulp);
-
-        //process key text
-        System.out.println("Key");
-        String[] key = processFile(keyFile);
-
-        ShiftRows(stateArray);
-
+*/
     }//end main
 
     /***********************
@@ -287,7 +291,7 @@ public class AES {
         }
 
         return c;
-    }
+    }//end dotMul
 
     private static int[][] stringToInt(String[][] strings) {
         int strLen = strings.length;
@@ -300,7 +304,28 @@ public class AES {
         }
 
         return hexInts;
-    }
+    }//end stringToInt
+
+    /*********************
+     * KeyExpansion
+     *********************/
+    public static String KeyExpansion(String key){
+        return key;
+    }//end KeyExpansion
+
+    //RotWord,SubWord,Rcon,Wi
+    private static String RotWord(String temp){
+        return temp.substring(2)+temp.substring(0,2);
+    }//end RotWord
+
+    private static String rCon(int i){
+        String[] constant={"01000000","02000000",
+                            "04000000","08000000",
+                            "10000000","20000000",
+                            "40000000","80000000",
+                            "1B000000","36000000"};
+        return constant[i];
+    }//end constant
 
     /*********************
      * other helper method
