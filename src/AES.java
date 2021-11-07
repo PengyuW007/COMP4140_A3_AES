@@ -318,6 +318,20 @@ public class AES {
         return temp.substring(2)+temp.substring(0,2);
     }//end RotWord
 
+    private static String SubWord(String rotWord){
+        String res = "";
+
+        for(int i=1;i<rotWord.length();i+=2){
+            char r = rotWord.charAt(i-1);
+            char c = rotWord.charAt(i);
+
+            int row = rcTransform(r);
+            int col = rcTransform(c);
+        }
+
+        return res;
+    }//end SubWord
+
     private static String rCon(int i){
         String[] constant={"01000000","02000000",
                             "04000000","08000000",
