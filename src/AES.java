@@ -34,8 +34,8 @@ public class AES {
         String[][] keyArray = rotate2DArray(keyArrayTemp);
         print2DArray(keyArray);
 
-        String[]wi = wI(key,sbox);
-        System.out.println(wi.length);
+        String[] wi = wI(key, sbox);
+        System.out.println(wi[43]);
 
 /*
         String[][] subByteArray = SubBytes(stateArray, sbox);
@@ -176,16 +176,18 @@ public class AES {
         long rc, wiNk, temp;
 
         //w0~w4
-        for (int i = 0; i < 4; i++) {
-            w[i] = key[i];
-        }
-
-        int k = -1;
+        w[0] = key[0] + key[1] + key[2] + key[3];
+        w[1] = key[4] + key[5] + key[6] + key[7];
+        w[2] = key[8] + key[9] + key[10] + key[11];
+        w[3] = key[12] + key[13] + key[14] + key[15];
+        
         //w4~w43
+        int k = -1;
         for (int i = 4; i < 44; i++) {
             tempStr = w[i - 1];
             wiNkStr = w[i - 4];
             wiNk = Long.parseLong(wiNkStr, 16);
+            temp = Long.parseLong(tempStr, 16);
 
             if (i % 4 == 0) {
                 roTWord = RotWord(tempStr);
@@ -194,9 +196,9 @@ public class AES {
                 rConiNk = rCon(k, subWord);
                 rc = Long.parseLong(rConiNk, 16);
                 w[i] = Long.toHexString(rc ^ wiNk);
+            }else{
+                w[i] = Long.toHexString(temp ^ wiNk);
             }
-            temp = Long.parseLong(tempStr, 16);
-            w[i] = Long.toHexString(temp ^ wiNk);
         }
 
         return w;
@@ -375,7 +377,6 @@ public class AES {
 
         return hexInts;
     }//end stringToInt
-
 
 
     /*********************
