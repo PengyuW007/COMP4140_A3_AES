@@ -35,7 +35,6 @@ public class AES {
         print2DArray(keyArray);
 
         String[]wi = wI(key,sbox);
-
         System.out.println(wi.length);
 
 /*
@@ -167,6 +166,75 @@ public class AES {
 
         return inTokens;
     }//end processPlaintext
+
+    /*********************
+     * KeyExpansion
+     *********************/
+    public static String[] wI(String[] key, String[][] sBox) {
+        String[] w = new String[44];
+        String tempStr, roTWord, subWord, rConiNk, wiNkStr;
+        long rc, wiNk, temp;
+
+        //w0~w4
+        for (int i = 0; i < 4; i++) {
+            w[i] = key[i];
+        }
+
+        int k = -1;
+        //w4~w43
+        for (int i = 4; i < 44; i++) {
+            tempStr = w[i - 1];
+            wiNkStr = w[i - 4];
+            wiNk = Long.parseLong(wiNkStr, 16);
+
+            if (i % 4 == 0) {
+                roTWord = RotWord(tempStr);
+                subWord = SubWord(roTWord, sBox);
+                k++;
+                rConiNk = rCon(k, subWord);
+                rc = Long.parseLong(rConiNk, 16);
+                w[i] = Long.toHexString(rc ^ wiNk);
+            }
+            temp = Long.parseLong(tempStr, 16);
+            w[i] = Long.toHexString(temp ^ wiNk);
+        }
+
+        return w;
+    }//end wI
+
+    //RotWord,SubWord,Rcon,Wi
+    private static String RotWord(String temp) {
+        return temp.substring(2) + temp.substring(0, 2);
+    }//end RotWord
+
+    private static String SubWord(String rotWord, String[][] sBox) {
+        String res = "";
+
+        for (int i = 1; i < rotWord.length(); i += 2) {
+            char r = rotWord.charAt(i - 1);
+            char c = rotWord.charAt(i);
+
+            int row = rcTransform(r);
+            int col = rcTransform(c);
+
+            res += sBox[row][col];
+        }
+
+        return res;
+    }//end SubWord
+
+    private static String rCon(int i, String subWord) {
+        String[] constant = {"01000000", "02000000",
+                "04000000", "08000000",
+                "10000000", "20000000",
+                "40000000", "80000000",
+                "1B000000", "36000000"};
+
+        long hexCons = Long.parseLong(constant[i], 16);
+        long hexWord = Long.parseLong(subWord, 16);
+
+        return Long.toHexString(hexCons ^ hexWord);
+    }//end constant
 
     /************************
      * SubBytes
@@ -308,74 +376,7 @@ public class AES {
         return hexInts;
     }//end stringToInt
 
-    /*********************
-     * KeyExpansion
-     *********************/
-    public static String[] wI(String[] key, String[][] sBox) {
-        String[] w = new String[44];
-        String tempStr, roTWord, subWord, rConiNk, wiNkStr;
-        long rc, wiNk, temp;
 
-        //w0~w4
-        for (int i = 0; i < 4; i++) {
-            w[i] = key[i];
-        }
-
-        int k = -1;
-        //w4~w43
-        for (int i = 4; i < 44; i++) {
-            tempStr = w[i - 1];
-            wiNkStr = w[i - 4];
-            wiNk = Long.parseLong(wiNkStr, 16);
-
-            if (i % 4 == 0) {
-                roTWord = RotWord(tempStr);
-                subWord = SubWord(roTWord, sBox);
-                k++;
-                rConiNk = rCon(k, subWord);
-                rc = Long.parseLong(rConiNk, 16);
-                w[i] = Long.toHexString(rc ^ wiNk);
-            }
-            temp = Long.parseLong(tempStr, 16);
-            w[i] = Long.toHexString(temp ^ wiNk);
-        }
-
-        return w;
-    }//end wI
-
-    //RotWord,SubWord,Rcon,Wi
-    private static String RotWord(String temp) {
-        return temp.substring(2) + temp.substring(0, 2);
-    }//end RotWord
-
-    private static String SubWord(String rotWord, String[][] sBox) {
-        String res = "";
-
-        for (int i = 1; i < rotWord.length(); i += 2) {
-            char r = rotWord.charAt(i - 1);
-            char c = rotWord.charAt(i);
-
-            int row = rcTransform(r);
-            int col = rcTransform(c);
-
-            res += sBox[row][col];
-        }
-
-        return res;
-    }//end SubWord
-
-    private static String rCon(int i, String subWord) {
-        String[] constant = {"01000000", "02000000",
-                "04000000", "08000000",
-                "10000000", "20000000",
-                "40000000", "80000000",
-                "1B000000", "36000000"};
-
-        long hexCons = Long.parseLong(constant[i], 16);
-        long hexWord = Long.parseLong(subWord, 16);
-
-        return Long.toHexString(hexCons ^ hexWord);
-    }//end constant
 
     /*********************
      * other helper method
