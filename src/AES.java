@@ -24,7 +24,7 @@ public class AES {
         String[][] inputArray = new String[4][4];
         String[][] stateArrayTemp = oneToTwo(plaintext, inputArray);
         String[][] stateArray = rotate2DArray(stateArrayTemp);
-        print2DArray(stateArray);
+        //print2DArray(stateArray);
 
         //process key text
         System.out.println("Key");
@@ -32,10 +32,13 @@ public class AES {
         String[][] keyArray2D = new String[4][4];
         String[][] keyArrayTemp = oneToTwo(key, keyArray2D);
         String[][] keyArray = rotate2DArray(keyArrayTemp);
-        print2DArray(keyArray);
+        //print2DArray(keyArray);
 
+        System.out.println("Key Schedule: ");
         String[] wi = wI(key, sbox);
-        System.out.println(wi[43]);
+        String[][] wiTemp = new String[11][4];
+        String[][] wi2D = oneToTwo(wi, wiTemp);
+        print2DArray(wi2D);
 
 /*
         String[][] subByteArray = SubBytes(stateArray, sbox);
@@ -107,19 +110,15 @@ public class AES {
      ***************************/
     private static String[][] oneToTwo(String[] data, String[][] twoD) {
         int count = 0;
-        int row = (int) Math.sqrt(data.length);
-        int col = row;
-        //String hex[][] = new String[row][col];
+        int row = twoD.length;
+        int col = twoD[0].length;
 
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
                 twoD[i][j] = data[count];
-                //int parseInt = Integer.parseInt(twoD[i][j], 16);
-                //hex[i][j] = Integer.toHexString(parseInt);
                 count++;
             }
         }
-
         return twoD;
     }//end oneToTwo
 
@@ -180,7 +179,7 @@ public class AES {
         w[1] = key[4] + key[5] + key[6] + key[7];
         w[2] = key[8] + key[9] + key[10] + key[11];
         w[3] = key[12] + key[13] + key[14] + key[15];
-        
+
         //w4~w43
         int k = -1;
         for (int i = 4; i < 44; i++) {
@@ -193,10 +192,10 @@ public class AES {
                 roTWord = RotWord(tempStr);
                 subWord = SubWord(roTWord, sBox);
                 k++;
-                rConiNk = rCon(k, subWord);
-                rc = Long.parseLong(rConiNk, 16);
+                rConiNk = rCon(k, subWord);//string
+                rc = Long.parseLong(rConiNk, 16);//long
                 w[i] = Long.toHexString(rc ^ wiNk);
-            }else{
+            } else {
                 w[i] = Long.toHexString(temp ^ wiNk);
             }
         }
@@ -389,6 +388,5 @@ public class AES {
                 System.out.print(twoDArray[i][j] + " ");
             }
         }
-        System.out.println();
     }//end printBox
 }
