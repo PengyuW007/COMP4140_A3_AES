@@ -34,26 +34,32 @@ public class AES {
         String[][] keyArray = rotate2DArray(keyArrayTemp);
         //print2DArray(keyArray);
 
-        System.out.println("Key Schedule: ");
-        String[] wi = wI(key, sbox);
+        System.out.println("\nKey Schedule: ");
+        String[] wi = KeyExpansion(key, sbox);
         String[][] wiTemp = new String[11][4];
         String[][] wi2D = oneToTwo(wi, wiTemp);
         print2DArray(wi2D);
 
+        String[][]enc = Encryption(stateArray,wi2D);
+        print2DArray(enc);
+
+
+        //String[][]keyArr = key(wi2D,0) ;
+       // String[][]addRounds = AddRounds(stateArray,keyArr);
+        //print2DArray(addRounds);
+
 /*
         String[][] subByteArray = SubBytes(stateArray, sbox);
-        //print2DArray(subByteArray);
-        ShiftRows(stateArray);
+
         String[][] shiftRowsArray = ShiftRows(subByteArray);
-        print2DArray(shiftRowsArray);
 
         String[][] invShiftRowsArray = InvShiftRows(subByteArray);
-        //print2DArray(invShiftRowsArray);
 
         String[][] matrixMulp = MixColumns(shiftRowsArray);
-        print2DArray(matrixMulp);
 */
     }//end main
+
+
 
     /***********************
      * SBox Methods
@@ -142,8 +148,6 @@ public class AES {
         BufferedReader inFile;
         String nextLine;
         String[] inTokens = new String[16];
-        //String hexStrings[] = new String[16];
-        int[] hexInts = new int[16];
 
         try {
             inFile = new BufferedReader(new FileReader(plaintext));
@@ -151,9 +155,6 @@ public class AES {
             inTokens = nextLine.trim().split(" ");
 
             for (int i = 0; i < inTokens.length; i++) {
-                //hexInts[i] = Integer.parseInt(inTokens[i], 16);
-                //String hexString = Integer.toHexString(hexInts[i]);
-                //hexStrings[i] = hexString;
                 System.out.print(inTokens[i]);
 
             }
@@ -166,10 +167,49 @@ public class AES {
         return inTokens;
     }//end processPlaintext
 
+    /***************************
+     * Encryption and Decryption
+     ***************************/
+    public static String[][]Encryption(String[][]state,String[][]key){
+        String[][]res = new String[4][4];
+
+        System.out.println("\n\nENCRYPTION PROCESS");
+        System.out.println("------------------");
+        System.out.println("Plain Text:");
+
+        for (int i = 0; i < state.length; i++) {
+            for (int j = 0; j < state[0].length; j++) {
+                System.out.print(state[i][j] + " ");
+            }
+        }
+
+        res = AddRounds(state,key);
+        return res;
+    }//end Encryption
+
+    /************
+     * AddRound
+     ************/
+    public static String[][]AddRounds(String[][]state,String[][]key){
+        String res[][] = new String[4][4];
+
+        for(int i = 0;i<4;i++){
+            for(int j = 0;j<4;j++){
+                String rStr =state[i][j];
+                String kStr =key[i][j];
+                int r = Integer.parseInt(rStr,16);
+                int k = Integer.parseInt(kStr,16);
+
+                res[i][j]=Integer.toHexString(r^k);
+            }
+        }
+        return res;
+    }
+
     /*********************
      * KeyExpansion
      *********************/
-    public static String[] wI(String[] key, String[][] sBox) {
+    public static String[] KeyExpansion(String[] key, String[][] sBox) {
         String[] w = new String[44];
         String tempStr, roTWord, subWord, rConiNk, wiNkStr;
         long rc, wiNk, temp;
@@ -201,7 +241,7 @@ public class AES {
         }
 
         return w;
-    }//end wI
+    }//end KeyExpansion
 
     //RotWord,SubWord,Rcon,Wi
     private static String RotWord(String temp) {
@@ -237,6 +277,19 @@ public class AES {
         return Long.toHexString(hexCons ^ hexWord);
     }//end constant
 
+    private static String[][]key(String[][]keyExpansion, int index){
+        String[][][]rounds = new String[11][4][4];
+
+
+        for(int i =0 ;i<11;i++){
+            String[][]r = new String[4][4];
+            //String[][]round = oneToTwo(keyExpansion[i], r);
+            //String[][]rotate = rotate2DArray(round);
+            //rounds[i]=rotate;
+        }
+
+        return rounds[index];
+    }//end key
     /************************
      * SubBytes
      ************************/
@@ -388,5 +441,11 @@ public class AES {
                 System.out.print(twoDArray[i][j] + " ");
             }
         }
-    }//end printBox
+    }//end print2DArray
+
+    public static void print1DArray(String[]oneDArray){
+        for(int i = 0;i<oneDArray.length;i++){
+            System.out.print(oneDArray[i]);
+        }
+    }
 }
