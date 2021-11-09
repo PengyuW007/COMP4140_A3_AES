@@ -1,3 +1,15 @@
+//-----------------------------------------
+// NAME		: Pengyu Wang
+// STUDENT NUMBER	: 7863401
+// COURSE		: COMP 4140
+// INSTRUCTOR	: Ben Li
+// ASSIGNMENT	: assignment 3
+// QUESTION	: question 1
+//
+// REMARKS: implement the encryption and decryption process of AES algorithm as described in the FIPS 197 document.
+//
+//-----------------------------------------
+
 import java.io.*;
 
 public class AES {
@@ -10,10 +22,10 @@ public class AES {
         String[][] sbox = sBox();
         String[][] inv_sbox = inv_sBox();
 
-        String plaintextFile = args[0];
-        String keyFile = args[1];
-       // String plaintextFile = "test1plaintext.txt";
-        //String keyFile = "test1key.txt";
+        //String plaintextFile = args[0];
+        //String keyFile = args[1];
+        String plaintextFile = "test1plaintext.txt";
+        String keyFile = "test1key.txt";
 
         /***************************
          * process file1 and file2,plaintext and key txt files
@@ -30,7 +42,7 @@ public class AES {
         String[] key = processFile(keyFile);
         String[][] keyArray2D = new String[4][4];
         String[][] keyArrayTemp = oneToTwo(key, keyArray2D);
-        String[][] keyArray = rotate2DArray(keyArrayTemp);
+        //String[][] keyArray = rotate2DArray(keyArrayTemp);
 
         System.out.println("Key Schedule: ");
         String[] wi = KeyExpansion(key, sbox);
@@ -38,14 +50,25 @@ public class AES {
         String[][] wi2D = oneToTwo(wi, wiTemp);
         print2DArray(wi2D);//4*11
 
-        String cipher[][] = Encryption(stateArray, wi2D, plaintext, sbox);
-        Decryption(cipher, wi2D, plaintext, sbox);
+        //Encryption and Decryption
+        String[][] cipher = Encryption(stateArray, wi2D, plaintext, sbox);
+        Decryption(cipher, wi2D, plaintext, inv_sbox);
+        System.out.println("\n\nEnd of Processing");
     }//end main
 
 
     /***********************
      * SBox Methods
      ***********************/
+    /*
+    inv_sBox
+
+    Purpose: get inv_sBox
+
+    Return:
+        Type: String[][]
+
+     */
     public static String[][] inv_sBox() {
         String[][] inv_sbox = new String[16][16];
 
@@ -69,6 +92,15 @@ public class AES {
 
     }//end inv_sBox
 
+    /*
+   sBox
+
+   Purpose: get sBox
+
+   Return:
+       Type: String[][]
+
+    */
     public static String[][] sBox() {
         String[][] sbox = new String[16][16];
 
@@ -96,6 +128,18 @@ public class AES {
     /***************************
      * Functions for 2D arrays
      ***************************/
+    /*
+    oneToTwo
+
+    Parameters:
+        String[]: data, 1D Array
+        String[][]: twoD, the 2D array of size
+
+    Return:
+        String[][]: 2D array
+
+    Purpose: Switch from 1D array to 2D array
+     */
     private static String[][] oneToTwo(String[] data, String[][] twoD) {
         int count = 0;
         int row = twoD.length;
@@ -110,7 +154,17 @@ public class AES {
         return twoD;
     }//end oneToTwo
 
-    //do the rotation from vertical to horizontal
+    /*
+        rotate2DArray
+
+        Parameters:
+            String[][] arr
+
+         Return: After rotation what 2D will be like
+                Type: String[][]
+
+         Purpose: do the rotation from vertical to horizontal
+     */
     private static String[][] rotate2DArray(String[][] arr) {
         for (int i = 0; i < arr.length; i++) {
             // [0][1],[1][0] switch
@@ -126,6 +180,18 @@ public class AES {
         return arr;
     }//end rotate2DArray
 
+    /*
+    processFile
+
+    Parameters:
+        String: text of the input
+
+    Return:
+        String[] array of the input
+
+    Purpose: process the input file, do what we need
+
+     */
     public static String[] processFile(String plaintext) {
         BufferedReader inFile;
         String nextLine;
@@ -152,6 +218,21 @@ public class AES {
     /***************************
      * Encryption and Decryption
      ***************************/
+    /*
+    Encryption
+
+    Parameters:
+           String[][]state
+           String[][]wi
+           String[][]plaintext: print the plaintext
+           String[][]sBox
+
+     Return:
+        Type: String[][]
+
+      Purpose:Return the cipher text
+
+     */
     public static String[][] Encryption(String[][] state, String[][] wi, String[] plaintext, String[][] sBox) {
 
         System.out.println("\n\nENCRYPTION PROCESS");
@@ -187,6 +268,21 @@ public class AES {
         return start;
     }//end Encryption
 
+    /*
+    Decryption
+
+    Parameters:
+           String[][]state
+           String[][]wi, the key schedule array
+           String[][]cipher: print the plaintext
+           String[][]inv_sBox
+
+     Return:
+        Type: String[][]
+
+      Purpose:Return the plain text
+
+     */
     public static String[][] Decryption(String[][] state, String[][] wi, String[] cipher, String[][] inv_sBox) {
 
         System.out.println("\n\nDECRYPTION PROCESS");
@@ -200,22 +296,22 @@ public class AES {
         //step 10
         String[][] key = getKey(wi, 10);
         String[][] cipher2D = AddRounds(state, key);
-        String [][]invShiftRows = InvShiftRows(cipher2D);
-        String [][]invSubBytes = InvSubBytes(invShiftRows,inv_sBox);
+        String[][] invShiftRows = InvShiftRows(cipher2D);
+        String[][] invSubBytes = InvSubBytes(invShiftRows, inv_sBox);
 
         //step 1~9
         for (int i = 1; i < 10; i++) {
-            key = getKey(wi,10-i);
-            String[][]start = AddRounds(invSubBytes,key);
-            String [][]invMixColumns = InvMixColumns(start);
+            key = getKey(wi, 10 - i);
+            String[][] start = AddRounds(invSubBytes, key);
+            String[][] invMixColumns = InvMixColumns(start);
             System.out.println("\nState after call " + i + " to InvMixColumns()");
             System.out.println("--------------------------------------");
             printVertically(invMixColumns);
             invShiftRows = InvShiftRows(invMixColumns);
-            invSubBytes = InvSubBytes(invShiftRows,inv_sBox);
+            invSubBytes = InvSubBytes(invShiftRows, inv_sBox);
         }
-        key = getKey(wi,0);
-        String [][]start = AddRounds(invSubBytes,key);
+        key = getKey(wi, 0);
+        String[][] start = AddRounds(invSubBytes, key);
         System.out.println("Plaintext:");
         printVertically(start);
         return start;
@@ -225,8 +321,21 @@ public class AES {
     /************
      * AddRound
      ************/
+    /*
+    AddRounds
+
+    Parameters:
+        String[][]state
+        String[][]key
+
+    Return: After Addition of the state Array
+            Type: String[][]
+
+    Purpose: After Addition of the state Array
+
+     */
     public static String[][] AddRounds(String[][] state, String[][] key) {
-        String res[][] = new String[4][4];
+        String[][] res = new String[4][4];
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -239,11 +348,24 @@ public class AES {
             }
         }
         return res;
-    }
+    }//end AddRounds
 
     /*********************
      * KeyExpansion
      *********************/
+    /*
+    KeyExpansion
+
+    Parameters:
+        String[]key
+        String[][]sBox
+
+    Return:
+    Type: String[]
+
+    Purpose:Key Expanded Array
+
+     */
     public static String[] KeyExpansion(String[] key, String[][] sBox) {
         String[] w = new String[44];
         String tempStr, roTWord, subWord, rConiNk, wiNkStr;
@@ -278,11 +400,34 @@ public class AES {
         return w;
     }//end KeyExpansion
 
+    /*
+    RotWord
+
+    Parameter
+        String temp
+
+    Return:
+        String
+
+    Purpose: Do Reversion
+     */
     //RotWord,SubWord,Rcon,Wi
     private static String RotWord(String temp) {
         return temp.substring(2) + temp.substring(0, 2);
     }//end RotWord
 
+    /*
+    SubWord
+
+    Parameter
+        String rotWord,
+        String[][]sBox
+
+    Return:
+        String
+
+    Purpose: Substitute Word
+     */
     private static String SubWord(String rotWord, String[][] sBox) {
         String res = "";
 
@@ -299,6 +444,19 @@ public class AES {
         return res;
     }//end SubWord
 
+    /*
+    rCon
+
+    Parameter
+        int i
+        String subWord
+
+    Return:
+        String
+
+    Purpose: Return the substituted word will be rCon by i of constant
+
+     */
     private static String rCon(int i, String subWord) {
         String[] constant = {"01000000", "02000000",
                 "04000000", "08000000",
@@ -312,6 +470,18 @@ public class AES {
         return Long.toHexString(hexCons ^ hexWord);
     }//end constant
 
+    /*
+    getKey
+
+    Parameters:
+           String[][]keyExpansion
+           int index
+
+     Return:
+        Type: String[][]
+
+     Purpose: key of Round i
+     */
     private static String[][] getKey(String[][] keyExpansion, int index) {
         //keyExpansion== wi[11][4];
         String[][][] rounds = new String[11][4][4];
@@ -320,7 +490,7 @@ public class AES {
 
         String[] keyArray = keyArray(curr);
         System.out.println();
-        //print1DArray(keyArray);
+
         String[][] rTemp = new String[4][4];
         String[][] r = oneToTwo(keyArray, rTemp);
 
@@ -528,9 +698,10 @@ public class AES {
     }//end stringToInt
 
 
-    private static String[][]InvMixColumns(String[][]arr){
+    private static String[][] InvMixColumns(String[][] arr) {
         return MixColumns(arr);
     }
+
     /*********************
      * other helper method
      *********************/
