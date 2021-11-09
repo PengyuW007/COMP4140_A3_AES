@@ -22,10 +22,8 @@ public class AES {
         String[][] sbox = sBox();
         String[][] inv_sbox = inv_sBox();
 
-        //String plaintextFile = args[0];
-        //String keyFile = args[1];
-        String plaintextFile = "test1plaintext.txt";
-        String keyFile = "test1key.txt";
+        String plaintextFile = args[0];
+        String keyFile = args[1];
 
         /***************************
          * process file1 and file2,plaintext and key txt files
@@ -40,8 +38,8 @@ public class AES {
         //process key text
         System.out.println("Key");
         String[] key = processFile(keyFile);
-        String[][] keyArray2D = new String[4][4];
-        String[][] keyArrayTemp = oneToTwo(key, keyArray2D);
+        //String[][] keyArray2D = new String[4][4];
+        //String[][] keyArrayTemp = oneToTwo(key, keyArray2D);
         //String[][] keyArray = rotate2DArray(keyArrayTemp);
 
         System.out.println("Key Schedule: ");
@@ -499,6 +497,18 @@ public class AES {
         return rounds[index] = round;
     }//end key
 
+    /*
+    keyArray
+
+    Parameters:
+        String[]keyCurr
+
+    Return:
+        Type: String[]
+
+    Purpose: From 32 elements to 16 elements
+
+     */
     private static String[] keyArray(String[] keyCurr) {
         //32 elements to 16
         String[] res = new String[16];
@@ -535,6 +545,15 @@ public class AES {
         return state;
     }//end SubBytes
 
+    /*
+    rcTransform
+
+    Parameters:
+        char c
+
+    Purpose: change from char to int, match them between char and int
+
+     */
     private static int rcTransform(char c) {
         int val = c - '0';
 
@@ -645,6 +664,15 @@ public class AES {
         return hexStrs;
     }//end stringToInt
 
+    /*
+    dotMul
+
+    Parameters:
+        int pre: 01,02,03's array
+        int num
+
+    Purpose: dot multiplication in hex
+    */
     private static int dotMul(int pre, int num) {
         int res = 0;
         if (pre == 1) {
@@ -657,6 +685,18 @@ public class AES {
         return res;
     }//end dotMul
 
+    /*
+    two, three
+
+    Parameters:
+        int num
+
+    Return:
+           int, result when {02}.{XY}
+
+    Purpose: do multiplication in hex way
+
+     */
     private static int two(int num) {
         int c = num << 1;
         int and = c & 128;
@@ -728,6 +768,19 @@ public class AES {
         }
     }
 
+    /*
+    numToHex
+
+    Parameters:
+        int num: the number should be convert to hex value
+
+     Return:
+        String
+        int to toHexString
+
+     Purpose: Quiet similar with toHexString, but it fixed, "9" to "09"
+
+     */
     private static String numToHex(int num) {
         return String.format("%02x", num);
     }
